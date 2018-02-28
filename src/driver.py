@@ -71,7 +71,10 @@ class HinemosDriver (ResourceDriverInterface):
 
         ip = context.resource.address
         username = HM.user
-        password = csapisession.DecryptPassword(context.resource.attributes['Password']).Value
+        password = csapisession.DecryptPassword(context.resource.attributes['Hinemos.Password']).Value
+
+        with CloudShellSessionContext(context) as session:
+            session.WriteMessageToReservationOutput(context.reservation.reservation_id, 'Password found : {}'.format(password))
 
         session = Session()
         session.auth = HTTPBasicAuth(username, password)

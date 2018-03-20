@@ -3,20 +3,10 @@
          <Category Name="Hidden Commands">
             <Command Description="" DisplayName="Orchestration Save" Name="orchestration_save" />
             <Command Description="" DisplayName="Orchestration Restore" Name="orchestration_restore" />
+            <Command Description="" DisplayName="Internal Function to print job results" Name="printjobresults" />
          </Category>
-         <Category Name="Command-Line Utils">
-            <Command Name="respository_addNode" DisplayName="Add Node to Repository" Tags="" Description="adds a node using Util`s python script">
-                <Parameters>
-                    <Parameter Name="MANAGERURL" Type="String" Mandatory = "True" DisplayName="Hinemos manager URL" DefaultValue="http://192.168.85.18:8080/HinemosWS/" Description="Hinemos manager URL"/>
-                    <Parameter Name="PASSWORD" Type="String" Mandatory = "True" DisplayName="Password" DefaultValue="hinemos" Description="User`s Password"/>
-                    <Parameter Name="IPADDRESS" Type="String" Mandatory = "True" DisplayName="Facility IP" DefaultValue="192.168.0.2" Description="The IP of the Facility to be added"/>
-                    <Parameter Name="FACILITYID" Type="String" Mandatory = "True" DisplayName="Facility ID" DefaultValue="WEBSERVER 1" Description="The ID of the Facility to be added"/>
-                    <Parameter Name="FACILITYNAME" Type="String" Mandatory = "True" DisplayName="Facility Name" DefaultValue="&quot;Web Server 1&quot;" Description="The Name of the Facility to be added"/>
-                </Parameters>
-            </Command>
-        </Category>
         <Category Name="SOAP Based Functions">
-            <Command Name="SOAP_runJob" DisplayName="RunJob (via SOAP)" Tags="" Description="Kickstart(run) a job">
+            <Command Name="SOAP_runJob" DisplayName="Run Job" Tags="" Description="Kickstart(run) a job">
                 <Parameters>
                     <Parameter Name="jobunitId" Type="String" Mandatory = "True" DisplayName="JobUnitID" DefaultValue="" Description="the Job`s UnitID"/>
                     <Parameter Name="jobId" Type="String" Mandatory = "True" DisplayName="JobID" DefaultValue="" Description="the Job`s ID"/>
@@ -24,11 +14,11 @@
                     <Parameter Name="jobWT" Type="String" Mandatory = "True" DisplayName="JobWaitTime" DefaultValue="1" Description="Tigger WaitTime"/>
                 </Parameters>
             </Command>
-            <Command Name="SOAP_function2" DisplayName="SOAP Function #2" Tags="" Description="tbd">
+            <Command Name="SOAP_getJobResults" DisplayName="Get Job Results" Tags="" Description="Get status result for job">
                 <Parameters>
-                    <Parameter Name="INPUT1" Type="String" Mandatory = "True" DisplayName="Input #1" DefaultValue="" Description="tbd"/>
-                    <Parameter Name="INPUT2" Type="String" Mandatory = "True" DisplayName="Input #2" DefaultValue="" Description="tbd"/>
-                    <Parameter Name="INPUT3" Type="String" Mandatory = "True" DisplayName="Input #3" DefaultValue="" Description="tbd"/>
+                    <Parameter Name="sessionId" Type="String" Mandatory = "True" DisplayName="SessionID" DefaultValue="" Description="the Job`s SessionID"/>
+                    <Parameter Name="jobunitId" Type="String" Mandatory = "False" DisplayName="JobUnitID" DefaultValue="" Description="the Job`s UnitID"/>
+                    <Parameter Name="jobId" Type="String" Mandatory = "False" DisplayName="JobID" DefaultValue="" Description="the Job`s ID"/>
                 </Parameters>
             </Command>
         </Category>

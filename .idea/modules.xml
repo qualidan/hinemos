@@ -2,9 +2,14 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../ORCHESTRATION SCRIPTS/Execute Script/.idea/Execute Script.iml" filepath="$PROJECT_DIR$/../../ORCHESTRATION SCRIPTS/Execute Script/.idea/Execute Script.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../PriOrchSetup/.idea/PriOrchSetup.iml" filepath="$PROJECT_DIR$/../../PriOrchSetup/.idea/PriOrchSetup.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../../batmswitch/.idea/batmswitch.iml" filepath="$PROJECT_DIR$/../../batmswitch/.idea/batmswitch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../RESTtraining/.idea/RESTtraining.iml" filepath="$PROJECT_DIR$/../../RESTtraining/.idea/RESTtraining.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../batmswitch/.idea/batmswitch.iml" filepath="$PROJECT_DIR$/../batmswitch/.idea/batmswitch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../dnac/.idea/dnac.iml" filepath="$PROJECT_DIR$/../dnac/.idea/dnac.iml" />
+      <module fileurl="file://$USER_HOME$/Downloads/genericserver/.idea/genericserver.iml" filepath="$USER_HOME$/Downloads/genericserver/.idea/genericserver.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/hinemos.iml" filepath="$PROJECT_DIR$/.idea/hinemos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../server_with_ports/.idea/server_with_ports.iml" filepath="$PROJECT_DIR$/../server_with_ports/.idea/server_with_ports.iml" />
     </modules>
   </component>
 </project>

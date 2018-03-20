@@ -7,6 +7,7 @@ from cloudshell.shell.core.session.cloudshell_session import CloudShellSessionCo
 import os
 import subprocess
 
+from cloudshell.core.logger.qs_logger import get_qs_logger
 from requests import Session
 from requests.auth import HTTPBasicAuth
 from zeep import Client
@@ -39,7 +40,7 @@ class HinemosDriver (ResourceDriverInterface):
         pass
 
     # <editor-fold desc="Discovery">
-
+    '''
     def respository_addNode(self, context,MANAGERURL="http://192.168.0.1:8080/HinemosWS/",PASSWORD="hinemos",IPADDRESS="192.168.0.2",FACILITYID="WEBSERVER 1",FACILITYNAME='"Web Server 1"'):
 
     # Based on https://translate.google.com/translate?hl=en&sl=ja&u=http://www.hinemos.info/ja/option/commandlinetool&prev=search
@@ -52,17 +53,73 @@ class HinemosDriver (ResourceDriverInterface):
         with CloudShellSessionContext(context) as session:
             session.WriteMessageToReservationOutput(context.reservation.reservation_id, 'Executing:{}'.format(python_command))
 
-        response = subprocess.Popen(python_command, cwd=r'c:\1')
+        logger = get_qs_logger(log_category=context.reservation.reservation_id, log_group=context.resource.name)
+
+        logger.info("Executing : "+python_command)
+        response = subprocess.check_output(python_command, cwd=r'c:\1')
+
+        for line in response:
+            logger.info("["+python_command+"] output : "+response)
 
         pass
+    '''
+    def SOAP_getJobResults(self, context, sessionId,jobunitId, Id):
+        # based on https://github.com/hinemos/hinemos/blob/cb0b0c63d16f201e62b7802a50547abd2f5b1225/HinemosClient/src_jobmanagement/com/clustercontrol/jobmanagement/util/JobEndpointWrapper.java
+        r_id = context.reservation.reservation_id
+        HM = data_model.Hinemos.create_from_context(context)
+        csapisession = CloudShellAPISession(host=context.connectivity.server_address,
+                                       token_id=context.connectivity.admin_auth_token,
+                                       domain=context.reservation.domain)
+        if jobunitId is None:
+            jobunitId=""
+        if Id is None:
+            Id = ""
 
-    def SOAP_function2(self, context,INPUT1="",INPUT2="",INPUT3=""):
+        ip = context.resource.address
+        username = HM.user
+        password = csapisession.DecryptPassword(context.resource.attributes['Hinemos.Password']).Value
 
         with CloudShellSessionContext(context) as session:
-            session.WriteMessageToReservationOutput(context.reservation.reservation_id, ' My IP = {}'.format(context.resource.address))
+            session.WriteMessageToReservationOutput(context.reservation.reservation_id, "Hinemos GetJobResults:")
+            session.WriteMessageToReservationOutput(r_id, "-Inputs: SessionID="+sessionId+" JobUnitId="+jobunitId+" Id="+Id)
+            session.WriteMessageToReservationOutput(r_id, "-Results:")
+
+        session = Session()
+        session.auth = HTTPBasicAuth(username, password)
+
+        client = Client("http://" + ip + ":8080/HinemosWS/JobEndpoint?wsdl",
+                        transport=Transport(session=session))
+
+        JobTreeItem = client.service.getJobDetailList(sessionId)
+
+        for job in JobTreeItem.children:
+            if jobunitId == "":
+                for job_cmd in job.children:
+                    jobunitId=job.data.jobunitId
+                    self.printjobresults(context, job, jobunitId, job_cmd.data.id)
+            else:
+                if str(job.data.jobunitId) == jobunitId:
+                    if Id == "":
+                        for job_cmd in job.children:
+                            self.printjobresults(context, job, jobunitId, job_cmd.data.id)
+                    else:
+                        for job_cmd in job.children:
+                            if str(job_cmd.data.id) == Id:
+                                self.printjobresults(context,job,jobunitId,Id)
         pass
 
-    def SOAP_runJob(self, context, jobunitId="JOBID1", jobId="JOBID1",jobWM=1,jobWT=1):
+    def printjobresults(self, context,job,jobunitId,Id):
+        r_id = context.reservation.reservation_id
+        with CloudShellSessionContext(context) as session:
+            session.WriteMessageToReservationOutput(r_id, " * JobUnitId=" + jobunitId + " Id=" + Id)
+            #session.WriteMessageToReservationOutput(r_id,"Results for SessionId (" + sessionId + ") JobUnitId (" + jobunitId + ") Id (" + Id + "):")
+            #session.WriteMessageToReservationOutput(r_id," - Start Date = " + str(job.detail.startDate))
+            #session.WriteMessageToReservationOutput(r_id," - End Date = " + str(job.detail.endDate))
+            session.WriteMessageToReservationOutput(r_id, " - End Status = {0}".format(str(job.detail.endStatus)))
+            #session.WriteMessageToReservationOutput(r_id, " - End Value = {0}".format(str(job.detail.endValue)))
+        pass
+
+    def SOAP_runJob(self, context, jobunitId, jobId,jobWM=1,jobWT=1):
 
         HM = data_model.Hinemos.create_from_context(context)
         csapisession = CloudShellAPISession(host=context.connectivity.server_address,
@@ -73,8 +130,8 @@ class HinemosDriver (ResourceDriverInterface):
         username = HM.user
         password = csapisession.DecryptPassword(context.resource.attributes['Hinemos.Password']).Value
 
-        with CloudShellSessionContext(context) as session:
-            session.WriteMessageToReservationOutput(context.reservation.reservation_id, 'Password found : {}'.format(password))
+        #with CloudShellSessionContext(context) as session:
+            #session.WriteMessageToReservationOutput(context.reservation.reservation_id, 'Password found : {}'.format(password))
 
         session = Session()
         session.auth = HTTPBasicAuth(username, password)
@@ -97,7 +154,9 @@ class HinemosDriver (ResourceDriverInterface):
         session_id = client.service.runJob(jobunitId, jobId, out, trig)
 
         with CloudShellSessionContext(context) as session:
-            session.WriteMessageToReservationOutput(context.reservation.reservation_id, 'runJob Output (Session ID) : {}'.format(session_id))
+            session.WriteMessageToReservationOutput(context.reservation.reservation_id,"Hinemos Runjob:")
+            session.WriteMessageToReservationOutput(context.reservation.reservation_id,  "-Inputs: JobUnitId="+jobunitId+" JobId="+jobId)
+            session.WriteMessageToReservationOutput(context.reservation.reservation_id, '-RunJob Output (Session ID) = {}'.format(session_id))
 
         pass
 

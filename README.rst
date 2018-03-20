@@ -1,20 +1,20 @@
 1) Hinemos Shell draft was tested against a v6 Hinemos server with CloudShell 8.2
 
-2) Contains two types of driver functions:
+2) Contains two main driver (SOAP based) functions:
 
-2.1) Calling the Command-line(python) API
+2.1) SOAP_getJobResults
+		
+		- SessionID Input must be entered
+		Will print all JobUnitID`s related to SessionID (the end status value)
+		in case JobUnitId is also entered will only print Job`s related to SessionID+JobUnitID
+		In case JobID is entered will only print the status value of that SessionID+JobUnitID+JobID
+		
 
-		Described here : http://www.hinemos.info/ja/option/commandlinetool
-		Currently calling dummy file (Repository_addNode.py) that needs to be placed in <C:\1>
-		Once the function is called it shall create a hinemos_execution_log.txt file and enter a call log entry
-	
-	*Assuming the subscription based tool exists > Place all files in "C:\1" or edit driver.py and change the "cwd" 
+2.2) SOAP_runJob
 
-2.2) 2 SOAP based functions
-
-		The first function is RunJob (JobUnitID and JobID must be entered)
+		-JobUnitID and JobID Input must be entered
 		OUTPUT windows will display Session ID on successful run
-		*username and password mussed be filled for the resource so SOAP login will be successful
 
-		Second Function is a dummy function awaiting to be edited
+	
+*username and password mussed be filled for the resource so SOAP login will be successful
 	

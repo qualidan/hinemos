@@ -6,6 +6,13 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="batmswitch" />
     <orderEntry type="module" module-name="PriOrchSetup" />
+    <orderEntry type="module" module-name="dnac" />
+    <orderEntry type="module" module-name="RESTtraining" />
+    <orderEntry type="module" module-name="Execute Script" />
+    <orderEntry type="module" module-name="genericserver" />
+    <orderEntry type="module" module-name="batmswitch" />
+    <orderEntry type="module" module-name="batmswitch" />
+    <orderEntry type="module" module-name="server_with_ports" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="Nosetests" />
